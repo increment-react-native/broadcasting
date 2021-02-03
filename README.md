@@ -8,8 +8,8 @@ https://github.com/zo0r/react-native-push-notification
 https://github.com/react-native-push-notification-ios/push-notification-ios
 
 
-App/index.js
-
+# App/index.js
+```javascript
 /**
  * @format
  */
@@ -33,12 +33,12 @@ function HeadlessCheck({ isHeadless }) {
 }
 
 AppRegistry.registerComponent(appName, () => HeadlessCheck);
-
+```
 
 
 # Usage
 
-
+```javascript
 import { fcmService } from 'services/FCMService';
 import { localNotificationService } from 'services/LocalNotificationService';
 
@@ -78,3 +78,4 @@ onNotification = (notify) => {
 onOpenNotification = (notify) => {
   console.log("[App] onOpenNotification", notify )
 }
+```
