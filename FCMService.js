@@ -1,5 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import { Platform } from 'react-native';
+import { Helper } from 'common'
 
 
 class FCMService{
@@ -32,6 +33,9 @@ class FCMService{
     messaging().getToken()
     .then(fcmToken => {
       if(fcmToken){
+        messaging()
+        .subscribeToTopic(Helper.APP_NAME_BASIC)
+        .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC));
         onRegister(fcmToken)
       }else{
         console.log("[FCMServices] User does not have a device token")

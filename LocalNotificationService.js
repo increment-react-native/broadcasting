@@ -4,7 +4,8 @@ import { Platform } from 'react-native';
 
 
 class  LocalNotificationService{
-  configure = (onOpenNotification) => {
+  configure = (onOpenNotification, channel) => {
+    this.createChannel(channel)
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function (token) {
@@ -48,11 +49,38 @@ class  LocalNotificationService{
     });
   }
 
+  createChannel = (channel) => {
+    console.log(`[LocalNotificationService] create channel`)
+    PushNotification.createChannel({
+        channelId: channel, // (required)
+        channelName: channel, // (required)
+        channelDescription: channel, // (optional) default: undefined.
+        playSound: true, // (optional) default: true
+        soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+        importance: 4, // (optional) default: 4. Int value of the Android notification importance
+        vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+      }, created => {
+        console.log(`[LocalNotificationService] createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+      });
+  }
+
   unRegister = () => {
     PushNotification.unregister();
   }
 
-  showNotification = (id, title, message, data = {}, options = {}, channelId) => {
+
+  showNotification = (id, title, message, data, user) => {
+
+    console.log('[showNotification] data', data.data)
+    console.log('[showNotification] user', user)
+    if(user == null){
+      return
+    }
+    let options = {
+      soundName: 'default',
+      playSound: true
+    }
+
     PushNotification.localNotification({
       // Android Only Properties
       ...this.buildAndroidNotification(id, title, message, data, options),
@@ -63,8 +91,7 @@ class  LocalNotificationService{
       message: message || "",
       playSound: options.playSound || false,
       soundName: options.soundName || "default",
-      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification,
-      channelId: channelId
+      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification
     })
   }
 
