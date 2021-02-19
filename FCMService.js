@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import { Platform } from 'react-native';
-
+import { Helper } from 'common';
 
 class FCMService{
   register = (onRegister, onNotification, onOpenNotification) => {
@@ -39,6 +39,12 @@ class FCMService{
     }).catch(error => {
       console.log("[FCMServices] getToken regected", error)
     })
+  }
+
+  subscribeTopic = (topic) => {
+    messaging()
+    .subscribeToTopic(Helper.APP_NAME_BASIC + '-' + topic)
+    .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC  + '-' + topic));
   }
 
   requestPermission = (onRegister) => {
