@@ -14,24 +14,24 @@ class FCMService{
   }
 
   messageListener = (onRegister, onNotification) => {
-    // messaging()
-    // .onNotificationOpenedApp(remoteMessage  => {
-    //   console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
-    //   if(remoteMessage){
-    //     const notification = remoteMessage.notification
-    //     onOpenNotification(notification)
-    //   }
-    // })
+    messaging()
+    .onNotificationOpenedApp(remoteMessage  => {
+      console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
+      if(remoteMessage){
+        const notification = remoteMessage.notification
+        onNotification(notification)
+      }
+    })
 
-    // messaging()
-    // .getInitialNotification()
-    // .then(remoteMessage => {
-    //   console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
-    //   if (remoteMessage) {
-    //     const notification = remoteMessage.notification
-    //     onOpenNotification(notification)
-    //   }
-    // });
+    messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
+      if (remoteMessage) {
+        const notification = remoteMessage.notification
+        onNotification(notification)
+      }
+    });
 
     this.messageListener = messaging().onMessage(async remoteMessage => {
       console.log("[FCMServices] A new FCM message arrived", remoteMessage)
@@ -47,10 +47,10 @@ class FCMService{
       }
     })
 
-    // messaging().onTokenRefresh(fcmToken => {
-    //   console.log("[FCMServices] New token refresh", fcmToken)
-    //   onRegister(fcmToken)
-    // })
+    messaging().onTokenRefresh(fcmToken => {
+      console.log("[FCMServices] New token refresh", fcmToken)
+      onRegister(fcmToken)
+    })
   }
 
   registerAppWithFCM = async() => {
