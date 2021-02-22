@@ -50,6 +50,12 @@ class FCMService{
     .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC  + '-' + topic));
   }
 
+  unsubscribeTopic = (topic) => {
+    messaging()
+    .unsubscribeFromTopic(Helper.APP_NAME_BASIC + '-' + topic)
+    .then(() => console.log('[FCMServices]  Unsubscribed fom the topic ' + Helper.APP_NAME_BASIC  + '-' + topic));
+  }
+
   requestPermission = (onRegister) => {
     messaging().requestPermission()
     .then(() => {
