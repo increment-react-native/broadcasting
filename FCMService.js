@@ -8,6 +8,51 @@ class FCMService{
     this.createNotificationListeners(onRegister, onNotification, onOpenNotification)
   }
 
+  registerOnOpen = (onRegister, onNotification) => {
+    this.checkPermission(onRegister)
+    this.messageListener(onRegister, onNotification)
+  }
+
+  messageListener = (onRegister, onNotification) => {
+    messaging()
+    .onNotificationOpenedApp(remoteMessage  => {
+      console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
+      if(remoteMessage){
+        const notification = remoteMessage.notification
+        onNotification(notification)
+      }
+    })
+
+    messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
+      if (remoteMessage) {
+        const notification = remoteMessage.notification
+        onNotification(notification)
+      }
+    });
+
+    this.messageListener = messaging().onMessage(async remoteMessage => {
+      console.log("[FCMServices] A new FCM message arrived", remoteMessage)
+      if(remoteMessage){
+        let notification = null
+        if(Platform.OS === 'ios'){
+          notification = remoteMessage.data.notification
+        }else{
+          notification = remoteMessage
+        }
+        console.log("[FCMServices] onNotification", notification)
+        onNotification(notification)
+      }
+    })
+
+    messaging().onTokenRefresh(fcmToken => {
+      console.log("[FCMServices] New token refresh", fcmToken)
+      onRegister(fcmToken)
+    })
+  }
+
   registerAppWithFCM = async() => {
     if(Platform.OS == 'ios'){
       await messaging().registerDeviceForRemoteMessages();
@@ -32,9 +77,9 @@ class FCMService{
     messaging().getToken()
     .then(fcmToken => {
       if(fcmToken){
-        messaging()
-        .subscribeToTopic(Helper.APP_NAME_BASIC)
-        .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC));
+        // messaging()
+        // .subscribeToTopic(Helper.APP_NAME_BASIC)
+        // .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC));
         onRegister(fcmToken)
       }else{
         console.log("[FCMServices] User does not have a device token")
@@ -54,6 +99,22 @@ class FCMService{
     messaging()
     .unsubscribeFromTopic(Helper.APP_NAME_BASIC + '-' + topic)
     .then(() => console.log('[FCMServices]  Unsubscribed fom the topic ' + Helper.APP_NAME_BASIC  + '-' + topic));
+  }
+
+  onMessage = (onNotification) => {
+    this.messageListener = messaging().onMessage(async remoteMessage => {
+      console.log("[FCMServices] A new FCM message arrived", remoteMessage)
+      if(remoteMessage){
+        let notification = null
+        if(Platform.OS === 'ios'){
+          notification = remoteMessage.data.notification
+        }else{
+          notification = remoteMessage
+        }
+        console.log("[FCMServices] onNotification", notification)
+        onNotification(notification)
+      }
+    })
   }
 
   requestPermission = (onRegister) => {
