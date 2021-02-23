@@ -137,7 +137,7 @@ class FCMService{
   createNotificationListeners = (onRegister, onNotification, onOpenNotification) => {
     messaging()
     .onNotificationOpenedApp(remoteMessage  => {
-      console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
+      // console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
       if(remoteMessage){
         const notification = remoteMessage.notification
         onOpenNotification(notification)
@@ -147,7 +147,7 @@ class FCMService{
     messaging()
     .getInitialNotification()
     .then(remoteMessage => {
-      console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
+      // console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
       if (remoteMessage) {
         const notification = remoteMessage.notification
         onOpenNotification(notification)
@@ -163,7 +163,7 @@ class FCMService{
         }else{
           notification = remoteMessage
         }
-        console.log("[FCMServices] onNotification", notification)
+        // console.log("[FCMServices] onNotification", notification)
         onNotification(notification)
       }
     })
