@@ -38,7 +38,7 @@ class FCMService{
       if(remoteMessage){
         let notification = null
         if(Platform.OS === 'ios'){
-          notification = remoteMessage.data.notification
+          notification = remoteMessage
         }else{
           notification = remoteMessage
         }
@@ -55,7 +55,7 @@ class FCMService{
 
   registerAppWithFCM = async() => {
     if(Platform.OS == 'ios'){
-      await messaging().registerDeviceForRemoteMessages();
+      // await messaging().registerDeviceForRemoteMessages();
       await messaging().setAutoInitEnabled(true);
     }
   }
@@ -137,7 +137,7 @@ class FCMService{
   createNotificationListeners = (onRegister, onNotification, onOpenNotification) => {
     messaging()
     .onNotificationOpenedApp(remoteMessage  => {
-      // console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
+      console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
       if(remoteMessage){
         const notification = remoteMessage.notification
         onOpenNotification(notification)
@@ -147,7 +147,7 @@ class FCMService{
     messaging()
     .getInitialNotification()
     .then(remoteMessage => {
-      // console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
+      console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
       if (remoteMessage) {
         const notification = remoteMessage.notification
         onOpenNotification(notification)
@@ -159,7 +159,7 @@ class FCMService{
       if(remoteMessage){
         let notification = null
         if(Platform.OS === 'ios'){
-          notification = remoteMessage.data.notification
+          notification = remoteMessage
         }else{
           notification = remoteMessage
         }
