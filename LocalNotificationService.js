@@ -64,6 +64,14 @@ class  LocalNotificationService{
       });
   }
 
+  setBadge = (number) => {
+    if(Platform.OS == 'ios'){
+      PushNotificationIOS.setApplicationIconBadgeNumber(number)
+    }else{
+      PushNotification.setApplicationIconBadgeNumber(number)
+    } 
+  }
+
   unRegister = () => {
     PushNotification.unregister();
   }
