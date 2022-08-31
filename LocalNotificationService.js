@@ -72,6 +72,14 @@ class  LocalNotificationService{
     } 
   }
 
+  getBadgeNumber = (callback) => {
+    if(Platform.OS == 'ios'){
+      PushNotificationIOS.getApplicationIconBadgeNumber(callback)
+    }else{
+      PushNotification.getApplicationIconBadgeNumber(callback)
+    } 
+  }
+
   unRegister = () => {
     PushNotification.unregister();
   }
